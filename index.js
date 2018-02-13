@@ -1,9 +1,10 @@
+//On front-end we'll use syntax like --> import express from 'express';
+// But on back-end not, because Node doesn't have support to this syntax
 const express = require('express');
 const mongoose = require('mongoose');
 const keys = require('./config/keys');
-//On front-end we'll use syntax like --> import express from 'express';
-// But on back-end not, because Node doesn't have support to this syntax
 require('./services/passport');
+require('./models/User');
 
 mongoose.connect(keys.mongoURI);
 
