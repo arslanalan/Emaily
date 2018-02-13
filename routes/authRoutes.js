@@ -13,4 +13,9 @@ module.exports = app => {
 
     //When user redirectec after login process
     app.get('/auth/google/callback', passport.authenticate('google'));
+
+    //Test user authentication
+    app.get('/api/current_user', (req, res) => {
+        res.send(req.user);
+    });
 };
