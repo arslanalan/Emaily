@@ -3,8 +3,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const keys = require('./config/keys');
-require('./services/passport');
+//Order of models are important, move them to up
 require('./models/User');
+require('./services/passport');
 
 mongoose.connect(keys.mongoURI);
 
