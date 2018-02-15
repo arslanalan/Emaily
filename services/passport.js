@@ -33,20 +33,19 @@ passport.use(
             callbackURL: '/auth/google/callback',
             proxy: true
         },
-        (accessToken, refreshToken, profile, done) => {
-            User.findOne({ googleId: profile.id }).then(existingUser => {
-                if (existingUser) {
-                    // We already have a user record with the given profile ID
-                    done(null, existingUser);
-                    // "null" means no error, everything is OK. Because there is no error, just the user exist.
-                } else {
-                    // We don't have a user record with this ID, make a new record
-                    //created model instance, and saved with saved() method
-                    new User({ googleId: profile.id })
-                        .save()
-                        .then(user => done(null, user));
-                }
-            });
+        async (accessToken, refreshToken, profile, done) => {
+            const existingUser = await User.findOne({ googleId: profile.id });
+
+            if (existingUser) {
+                // We already have a user record with the given profile ID
+                return done(null, existingUser);
+                // "null" means no error, everything is OK. Because there is no error, just the user exist.
+                //Because of the "return" statement, no need "else" block
+            }
+            // We don't have a user record with this ID, make a new record
+            //created model instance, and saved with saved() method
+            const user = await new User({ googleId: profile.id }).save();
+            done(null, user);
         }
     )
 );
