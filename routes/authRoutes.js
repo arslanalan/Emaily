@@ -23,8 +23,7 @@ module.exports = app => {
     //Logout user
     app.get('/api/logout', (req, res) => {
         req.logout();
-        //Send response. Prove of user no longer signed in
-        res.send(req.user);
+        res.redirect('/');
     });
 
     //Test user authentication
