@@ -12,7 +12,13 @@ module.exports = app => {
     );
 
     //When user redirectec after login process
-    app.get('/auth/google/callback', passport.authenticate('google'));
+    app.get(
+        '/auth/google/callback',
+        passport.authenticate('google'),
+        (req, res) => {
+            res.redirect('/surveys');
+        }
+    );
 
     //Logout user
     app.get('/api/logout', (req, res) => {
