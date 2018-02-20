@@ -27,6 +27,7 @@ app.use(passport.session());
 //"require" returns a function,
 //and we call that function with paramater "app"
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
 
 //Defined PORT for Heroku adaptation.
 //This configuration could be change based on service provider like AWS, or digitalocean.
