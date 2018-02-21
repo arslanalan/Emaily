@@ -5,6 +5,11 @@ module.exports = app => {
     // We define amount again here
     // We use req.body thanks to the body-parser npm module
     app.post('/api/stripe', async (req, res) => {
+        if (!req.user) {
+            // Set response status to "401", and send error message.
+            return res.status(401).send({ error: 'You must log in!' });
+        }
+
         const charge = await stripe.charges.create({
             amount: 500,
             currency: 'usd',
