@@ -12,6 +12,21 @@ module.exports = app => {
             source: req.body.id
         });
 
-        console.log(charge);
+        // When a request is made, it will send the cookie with identifying info inside.
+        // This identifying piece of info is passed into deserializeUser to turn it into a user model instance.
+        // i.e use cookie info to check for user in DB.
+        // So after deserializeUser, req.user is added to the request object.
+
+        req.user.credits += 5;
+        // This request is asyncronous, takes some amount of time
+        // So, we use "await"
+        // After successfully completed the save process,
+        // It'll return the updated user model
+        const user = await req.user.save();
+
+        // Return the updated user
+        // We could also returned the "req.user", but it could had been changed
+        // on db, so we take fresh user model "user"
+        res.send(user);
     });
 };
