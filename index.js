@@ -31,6 +31,25 @@ app.use(passport.session());
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
 
+if (process.env.NODE_ENV === 'production') {
+    // Express will serve up production assets
+    // like our main.js file, or main.css file
+    app.use(express.static('client/build'));
+
+    // Express will serve up the index.html file
+    // if it doesn't recognize the route.
+    // Order of routes is important
+    // If the route could not be found in 'authRoutes', 'billingRoutes' and
+    // 'client/build'
+    // then look this route
+    // this route says, send back index.html which is under
+    // 'client\build' folder structure to any request
+    const path = require('path');
+    app.get('*', (req, res) => {
+        app.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    });
+}
+
 //Defined PORT for Heroku adaptation.
 //This configuration could be change based on service provider like AWS, or digitalocean.
 const PORT = process.env.PORT || 5000;
