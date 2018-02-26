@@ -46,7 +46,7 @@ if (process.env.NODE_ENV === 'production') {
     // 'client\build' folder structure to any request
     const path = require('path');
     app.get('*', (req, res) => {
-        app.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     });
 }
 
