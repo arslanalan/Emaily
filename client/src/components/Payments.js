@@ -19,4 +19,7 @@ class Payments extends Component {
     }
 }
 
+// We don't want commit stripe publish key, so we defined it in heroku
+// In order to rebuild, we'll commit this note, and push to Heroku
+
 export default connect(null, actions)(Payments);
