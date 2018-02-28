@@ -25,6 +25,7 @@ module.exports = app => {
         // Mailer: first argument is an object with subject, and recipients argument
         // second argument is a template with survey.body
         const mailer = new Mailer(survey, surveyTemplate(survey));
+        mailer.send();
     });
 };
 
