@@ -3,8 +3,16 @@ import React, { Component } from 'react';
 // reduxForm helper allows our component to communicate with our redux store
 // like connect helper on react-redux library
 import { reduxForm, Field } from 'redux-form';
+import SurveyField from './SurveyField';
 
 class SurveyForm extends Component {
+    renderFields() {
+        return (
+            <div>
+                <Field type="text" name="title" component={SurveyField} />
+            </div>
+        );
+    }
     render() {
         // When you type text to "surveyTitle" field,
         // reduxForm takes the value typed, and
@@ -17,7 +25,7 @@ class SurveyForm extends Component {
                         console.log(values)
                     )}
                 >
-                    <Field type="text" name="surveyTitle" component="input" />
+                    {this.renderFields()}
                     <button type="submit">Submit</button>
                 </form>
             </div>
