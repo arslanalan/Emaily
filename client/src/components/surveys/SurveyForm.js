@@ -61,9 +61,25 @@ class SurveyForm extends Component {
     }
 }
 
+function validate(values) {
+    const errors = {};
+
+    if (!values.title) {
+        errors.title = 'You must provide a title';
+    }
+
+    // If returns an empty object,
+    // redux form assumes no error exist in form
+    // if error object not empty, redux form stop the submit process
+    return errors;
+}
+
 // reduxForm here only takes one argument, an object with form property
+// it's possible to add validate property within this object
+// When user submit the form, validate function will be automatically called
 // it's not same as connect helper
 // connect helper takes more arguments
 export default reduxForm({
+    validate,
     form: 'SurveyForm'
 })(SurveyForm);
