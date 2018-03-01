@@ -13,4 +13,6 @@ class SurveyForm extends Component {
 // reduxForm here only takes one argument, an object with form property
 // it's not same as connect helper
 // connect helper takes more arguments
-export default reduxForm()(SurveyForm);
+export default reduxForm({
+    form: 'SurveyForm'
+})(SurveyForm);
