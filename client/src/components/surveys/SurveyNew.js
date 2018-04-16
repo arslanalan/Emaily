@@ -1,5 +1,6 @@
 // SurveyNew shows SurveyForm and SurveyFormReview
 import React, { Component } from 'react';
+import { reduxForm } from 'redux-form';
 import SurveyForm from './SurveyForm';
 import SurveyFormReview from './SurveyFormReview';
 
@@ -37,4 +38,12 @@ class SurveyNew extends Component {
     }
 }
 
-export default SurveyNew;
+export default reduxForm({
+    form: 'SurveyForm'
+})(SurveyNew);
+
+// We did not keep the option "destroyOnUnmount: false"
+// which added in SurveyForm.js component
+// So, when SurveyNew component re-rendered
+// the data included dumped
+// this is tricky way
