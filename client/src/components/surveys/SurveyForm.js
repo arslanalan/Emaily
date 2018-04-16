@@ -62,7 +62,7 @@ function validate(values) {
     // validation will automatically run one time at boot of app
     // So, no values, and it'll throw an error of undefined
     // So, we send empty string if values is undefined to get ride of error
-    errors.emails = validateEmails(values.emails || '');
+    errors.recipients = validateEmails(values.recipients || '');
 
     _.each(formFields, ({ name }) => {
         if (!values[name]) {
