@@ -16,12 +16,11 @@ module.exports = app => {
     });
 
     app.post('/api/surveys/webhooks', (req, res) => {
+        const p = new Path('/api/surveys/:surveyId/:choice');
+
         const events = _.map(req.body, ({ email, url }) => {
-            //extract the path as "/api/surveys/surveyID/choice"
-            const pathname = new URL(url).pathname;
-            const p = new Path('/api/surveys/:surveyId/:choice');
             // match will either be an object, or null
-            const match = p.test(pathname);
+            const match = p.test(new URL(url).pathname);
             if (match) {
                 return {
                     email,
