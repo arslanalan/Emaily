@@ -18,24 +18,23 @@ module.exports = app => {
     app.post('/api/surveys/webhooks', (req, res) => {
         const p = new Path('/api/surveys/:surveyId/:choice');
 
-        const events = _.map(req.body, ({ email, url }) => {
-            // match will either be an object, or null
-            const match = p.test(new URL(url).pathname);
-            if (match) {
-                return {
-                    email,
-                    surveyId: match.surveyId,
-                    choice: match.choice
-                };
-            }
-        });
+        const events = _.chain(req.body)
+            .map(({ email, url }) => {
+                // match will either be an object, or null
+                const match = p.test(new URL(url).pathname);
+                if (match) {
+                    return {
+                        email,
+                        surveyId: match.surveyId,
+                        choice: match.choice
+                    };
+                }
+            })
+            .compact()
+            .uniqBy('email', 'surveyId')
+            .value();
 
-        // Remove elements that are undefined
-        const compactEvents = _.compact(events);
-        // Remove dublicate elements, same email and same surveyId
-        const uniqueEvents = _.uniqBy(compactEvents, 'email', 'surveyId');
-
-        console.log(uniqueEvents);
+        console.log(events);
 
         res.send({});
     });
