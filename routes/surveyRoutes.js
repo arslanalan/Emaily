@@ -1,3 +1,7 @@
+const _ = require('lodash');
+const Path = require('path-parser').default;
+// or const { Path } = require('path-parser');
+const { URL } = require('url');
 const mongoose = require('mongoose');
 const requireLogin = require('../middlewares/requireLogin');
 const requireCredits = require('../middlewares/requireCredits');
@@ -12,7 +16,28 @@ module.exports = app => {
     });
 
     app.post('/api/surveys/webhooks', (req, res) => {
-        console.log(req.body);
+        const events = _.map(req.body, ({ email, url }) => {
+            //extract the path as "/api/surveys/surveyID/choice"
+            const pathname = new URL(url).pathname;
+            const p = new Path('/api/surveys/:surveyId/:choice');
+            // match will either be an object, or null
+            const match = p.test(pathname);
+            if (match) {
+                return {
+                    email,
+                    surveyId: match.surveyId,
+                    choice: match.choice
+                };
+            }
+        });
+
+        // Remove elements that are undefined
+        const compactEvents = _.compact(events);
+        // Remove dublicate elements, same email and same surveyId
+        const uniqueEvents = _.uniqBy(compactEvents, 'email', 'surveyId');
+
+        console.log(uniqueEvents);
+
         res.send({});
     });
 
