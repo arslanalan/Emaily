@@ -11,14 +11,14 @@ const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
 const Survey = mongoose.model('surveys');
 
 module.exports = app => {
-    app.get('/api/surveys/thanks', (req, res) => {
+    app.get('/api/surveys/:surveyId/:choice', (req, res) => {
         res.send('Thanks for voting!');
     });
 
     app.post('/api/surveys/webhooks', (req, res) => {
         const p = new Path('/api/surveys/:surveyId/:choice');
 
-        const events = _.chain(req.body)
+        _.chain(req.body)
             .map(({ email, url }) => {
                 // match will either be an object, or null
                 const match = p.test(new URL(url).pathname);
@@ -32,9 +32,29 @@ module.exports = app => {
             })
             .compact()
             .uniqBy('email', 'surveyId')
+            .each(({ surveyId, email, choice }) => {
+                //find and update record which match the specified below
+                Survey.updateOne(
+                    {
+                        // in mongo query ids are specified as _id
+                        _id: surveyId,
+                        recipients: {
+                            // $elemMatch is a mongo operator
+                            $elemMatch: { email: email, responded: false }
+                        }
+                    },
+                    {
+                        // [choice] wil be 'yes' or 'no'
+                        // so 'yes' or 'no' property will be incremented 1
+                        $inc: { [choice]: 1 },
+                        // 'recipients.$.responded' $ specify the current record
+                        $set: { 'recipients.$.responded': true },
+                        // $inc and $set are a mongo operators
+                        lastResponded: new Date()
+                    }
+                ).exec(); //exec() means execute the query, it's required
+            })
             .value();
-
-        console.log(events);
 
         res.send({});
     });
